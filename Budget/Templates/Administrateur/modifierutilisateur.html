@@ -1,0 +1,115 @@
+{% extends "../master.html" %}
+
+{% block title %}Modifier utilisateur{% endblock  %}
+
+{% comment %} SIDEBAR {% endcomment %}
+{% block sidebar %}
+<a href="" class="brand">
+    <img src="../../static/assets/img/logos.png" alt="" width="80px">
+    <span class="text">BudgetApp</span>
+</a>
+<ul class="side-menu top">
+    <li>
+        <a href="{% url "adminIndex" %}">
+            <i class='bx bxs-dashboard' ></i>
+            <span class="text">Accueil</span>
+        </a>
+    </li>
+    <li class="active">
+        <a href="{% url "adminutilisateur" %}">
+            <i class='bx bxs-user' ></i>
+            <span class="text">Utilisateur</span>
+        </a>
+    </li>
+    <li>
+        <a href="{% url "adminsuivi" %}">
+            <i class='bx bxs-bank' ></i>
+            <span class="text">Suivi des budget</span>
+        </a>
+    </li>
+    <li>
+        <a href="{% url "adminstatistique" %}">
+            <i class='bx bxs-doughnut-chart' ></i>
+            <span class="text">Statistique</span>
+        </a>
+    </li>
+</ul>
+<ul class="side-menu">
+    <li>
+        <a href="{% url "adminparametre" %}">
+            <i class='bx bxs-cog' ></i>
+            <span class="text">Parametre</span>
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'deconnexion' %}" class="logout">
+            <i class='bx bxs-log-out-circle' ></i>
+            <span class="text">Deconnexion</span>
+        </a>
+    </li>
+</ul>
+{% endblock  %}
+
+{% comment %} BUDGET {% endcomment %}
+{% block budgetTotal %}
+{{ total_montant }}
+{% endblock  %}
+
+{% block balance %}
+{{ total_depense }}
+{% endblock  %}
+
+{% block solde %}
+{{ solde }}
+{% endblock  %}
+
+{% comment %} Navbar head {% endcomment %}
+{% block navbarhead %}
+<a class="active" href="adminutilisateur">Utilisateur</a>
+{% endblock  %}
+
+{% block content %}
+<div class="table-data">
+    <div class="order">
+        <div class="head">
+<div class="container mt-5" data-aos="zoom-in">
+	<div class="row justify-content-center">
+	  <div class="col-md-6">
+		<div class="card">
+		  <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <span class="inputs">Modifier utilisateur</span>
+        <a href="{% url "adminutilisateur" %}"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16" color="red">
+          <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+      </svg></a>
+    </div>
+		  <div class="card-body">
+			<form action="" method="post">
+			  <div class="form-group">
+				{% csrf_token %}
+				<label class="form-label">Pseudo</label>
+				<input type="text" class="form-control" id="codeInput" name="pseudo" value="{{utilisateur.pseudo}}" placeholder="Entrez le nouveau pseudo" required>
+                <label class="form-label">Contact</label>
+				<input type="text" class="form-control" id="codeInput" name="contact" value="{{utilisateur.contact}}" placeholder="Entrez le nouveau contact" required>
+                <label class="form-label">Mot de passe</label>
+				<input type="password" class="form-control" id="codeInput" name="mdp" value="{{utilisateur.mdp}}" placeholder="Entrez le nouveau pseudo" required>
+      </div><br>
+        <!-- Affichage des messages d'erreur -->
+      {% if messages %}
+      <ul>
+        {% for message in messages %}
+            <li style="color:red;">{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+			<button type="submit" class="btn btn-success" style="width: 100%;">Modifier</button>
+			  
+			</form>
+		  </div>
+		</div>
+	  </div>
+	</div>
+  </div>
+</div>
+</div>
+</div>
+{% endblock  %}

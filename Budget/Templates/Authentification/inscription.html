@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/bootstrap.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'aos-master/dist/aos.css' %}" rel="stylesheet">
+    
+    <style>
+        .erreur {
+          color: red;
+        }
+    </style>
+    <title>S'inscrire</title>
+</head>
+<body>
+<div class="Inscription" id="Inscription">
+    <div class="container py-5 h-100">
+      <div class="row d-flex align-items-center justify-content-center h-100">
+        <div class="col-md-8 col-lg-7 col-xl-6">
+          <img src="{% static 'assets/img/8878499.jpg' %}" class="img-fluid" alt="Phone image">
+        </div>
+        <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+          <form action="inscription" method="post">
+            {% csrf_token %}
+            <div class="form-outline mb-4">
+                <h1 class="connecter">COMPTABLE</h1>
+            </div>
+
+            <div class="form-outline mb-1">
+              <label class="form-label">Pseudo</label>
+              <input type="text" id="pseudo" class="form-control form-control-lg" {% if pseudo %} value="{{pseudo}}"{% endif %} name="pseudo" required/>
+            </div>
+            
+            <div class="form-outline mb-1">
+              <label class="form-label">Contact</label>
+              <input type="text" id="contact" class="form-control form-control-lg" pattern="^(032|033|034|038)\d{7}$" {% if contact %} value="{{contact}}"{% endif %} name="contact" required/>
+            </div>
+
+            <!-- Password input -->
+            <div class="form-outline mb-1">
+              <label class="form-label">Mot de passe</label>
+              <input type="password" id="mdp" class="form-control form-control-lg" name="mdp" minlength="8" required/>
+            </div>
+      
+            <div class="form-outline mb-1">
+                <label class="form-label">Confirmation mot de passe</label>
+                <input type="password" id="mdp" class="form-control form-control-lg" name="mdp2" minlength="8" required/>
+            </div>
+
+            <!-- Submit button -->
+            <div class="container">
+              <div class="row">
+                <div class="col text-center">
+                  <button type="submit" class="btn btn-success btn-lg">Inscription</button>
+                </div>
+              </div>
+            </div>
+
+            {% if error_message %}
+            <p style="color: red;">{{ error_message }}</p>
+            {% endif %}
+            <div class="d-flex justify-content-around align-items-center mb-4 p-4">
+              <a href="/">vous avez deja un compte</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
+    <script src="{% static 'assets/bootstrap/bootstrap.min.js' %}"></script>
+    <script src="{% static 'aos-master/dist/aos.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/bootstrap.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'aos-master/dist/aos.css' %}" rel="stylesheet">
+  
+    <style>
+        .container{
+            padding: 10%;
+        }
+        .erreur {
+          color: red;
+        }
+    </style>
+    <title>Validation des codes</title>
+</head>
+<body>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          Vérification de code
+        </div>
+        <div class="card-body">
+          <form action="{% url "code" %}" method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <div class="form-group">
+              <label for="codeInput">Code de vérification</label>
+              <input type="password" class="form-control" name="verife" placeholder="Entrez le code" required>
+            </div><br>
+            {% if message %}
+            <p class="erreur">{{message}}</p>
+            {% endif %}
+            <button type="Submit" class="btn btn-success" style="width: 100%;">Vérifier</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    <script src="{% static 'assets/bootstrap/bootstrap.min.js' %}"></script>
+    <script src="{% static 'aos-master/dist/aos.js' %}"></script>
+    <script>
+      AOS.init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+{% extends "../master.html" %}
+
+{% block title %}Suivi des budgets{% endblock  %}
+
+{% comment %} SIDEBAR {% endcomment %}
+{% block sidebar %}
+<a href="#" class="brand">
+    <img src="../../static/assets/img/logos.png" alt="" width="80px">
+    <span class="text">BudgetApp</span>
+</a>
+<ul class="side-menu top">
+    <li>
+        <a href="adminIndex">
+            <i class='bx bxs-dashboard' ></i>
+            <span class="text">Accueil</span>
+        </a>
+    </li>
+    <li>
+        <a href="adminutilisateur">
+            <i class='bx bxs-user' ></i>
+            <span class="text">Utilisateur</span>
+        </a>
+    </li>
+    <li class="active">
+        <a href="adminsuivi">
+            <i class='bx bxs-bank' ></i>
+            <span class="text">Suivi des budgets</span>
+        </a>
+    </li>
+    <li>
+        <a href="adminstatistique">
+            <i class='bx bxs-doughnut-chart' ></i>
+            <span class="text">Statistique</span>
+        </a>
+    </li>
+</ul>
+<ul class="side-menu">
+    <li>
+        <a href="adminparametre">
+            <i class='bx bxs-cog' ></i>
+            <span class="text">Parametre</span>
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'deconnexion' %}" class="logout">
+            <i class='bx bxs-log-out-circle' ></i>
+            <span class="text">Deconnexion</span>
+        </a>
+    </li>
+</ul>
+{% endblock  %}
+
+{% comment %} Navbar head {% endcomment %}
+{% block navbarhead %}
+<a class="active" href="adminsuivi">Suivi des budgets</a>
+{% endblock  %}
+
+{% comment %} BUDGET {% endcomment %}
+{% block budgetTotal %}
+{{ total_montant }}
+{% endblock  %}
+
+{% block balance %}
+{{ total_depense }}
+{% endblock  %}
+
+{% block solde %}
+{{ solde }}
+{% endblock  %}
+
+{% comment %} Content {% endcomment %}
+{% block content %}
+<div class="table-data">
+    <div class="order">
+        <div class="head">
+            <div class="container">
+                <h2 class="majuscule">suivi des budget</h2>
+                <div class="input-group mb-3">
+                    <input type="text" id="searchInput" name="recherche" class="form-control" placeholder="Chercher..." oninput="searchTable()">
+                    <div class="input-group-append">
+                      <span class="input-group-text"><i class="fas fa-search"></i></span> <!-- Remplacez fas fa-search par la classe de votre icône de recherche -->
+                    </div>
+                  </div>                  
+                <table class="table table-responsive table-bordered border-dark text-capitalize" id="myTable">
+                  <thead>
+                    <tr>
+                      <th>Nom de la rubrique</th>
+                      <th>Ligne Budgetaire</th>
+                      <th>Date</th>
+                      <th>Montant</th>
+                      <th>info</th>
+                      <th>Modifier</th>
+                      <th>Supprimer</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for depenses in depense %}
+                    <tr>
+                        <td class="w-10">{{depenses.rubrique}}</td>
+                        <td class="w-10">{{depenses.ligne}}</td>
+                        <td class="">{{depenses.date}}</td>
+                        <td class="">{{depenses.montant}} MGA</td>
+                          <td class=""><a href="{% url "depenseinfo" depenses.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Plus d'information"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+                          </svg></a></td>
+                          <td class="">
+                            <a href="{% url "modifierdepense" depenses.id %}"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16" color="#FFC107" style="cursor: pointer;">
+                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                            </svg></a>
+                          </td>
+                          <td class=""><form id="deleteDepenseForm" action="{% url 'supprimer_depense' depenses.id %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="button" onclick="confirmDeleteDepense()" style="border: none; background-color: transparent;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x-circle-fill ms-3" viewBox="0 0 16 16" color="red" style="cursor: pointer;">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                                </svg>
+                            </button>
+                        </form></td>
+                    </tr>
+                    {% endfor %}
+                    <!-- Ajoutez d'autres lignes pour plus de transactions -->
+                  </tbody>
+                </table>
+              </div>
+        </div>
+    </div>
+</div>
+{% endblock  %}

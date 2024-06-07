@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Se connecter</title>
+
+    <link rel="stylesheet" href="{% static 'assets/style.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/bootstrap.min.css' %}">
+    
+</head>
+<body>
+    <section class="vh-100">
+        <div class="container py-5 h-100">
+          <div class="row d-flex align-items-center justify-content-center h-100">
+            <div class="col-md-8 col-lg-7 col-xl-6">
+              <img src="{% static 'assets/img/8878499.jpg' %}"
+                class="img-fluid" alt="Phone image">
+            </div>
+            <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+              <form action="{% url "connexion" %}" method="post">
+                {% csrf_token %}
+                
+                <div class="form-outline mb-4">
+                    <h1 class="connecter">CONNEXION</h1>
+                  </div>
+             
+                <div class="form-outline mb-4">
+                  <label class="form-label">Pseudo</label>
+                  <input type="text" id="pseudo" class="form-control form-control-lg" {%if pseudo %} value="{{pseudo}}" {% endif %} name="pseudo" required/>
+                </div>
+      
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                  <label class="form-label">Mot de passe</label>
+                  <input type="password" id="mdp" class="form-control form-control-lg" name="mdp" minlength="8" required/>
+                </div>
+          
+                {% if error_message %}
+                <p style="color: red;">{{ error_message }}</p>
+                {% endif %}
+                <!-- Submit button -->
+                <div class="container">
+                  <div class="row">
+                    <div class="col text-center">
+                      <button type="Submit" class="btn btn-success btn-lg">Se connecter</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-around align-items-center mb-4 p-4">
+                  <a href="{% url "code" %}">creer un compte comptable</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+<script href="{% static 'assets/bootstrap/bootstrap.min.js' %}"></script>
+</body>
+</html>

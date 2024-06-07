@@ -1,0 +1,112 @@
+{% extends "../master.html" %}
+
+{% block title %}Comptable suivi budget{% endblock  %}
+
+{% comment %} SIDEBAR {% endcomment %}
+{% block sidebar %}
+<a href="#" class="brand">
+    <img src="../../static/assets/img/logos.png" alt="" width="80px">
+    <span class="text">BudgetApp</span>
+</a>
+<ul class="side-menu top">
+    <li>
+        <a href="comptableindex">
+            <i class='bx bxs-dashboard' ></i>
+            <span class="text">Accueil</span>
+        </a>
+    </li>
+    <li>
+        <a href="comptablesaisie">
+            <i class='bx bxs-edit' ></i>
+            <span class="text">Saisie budget</span>
+        </a>
+    </li>
+    <li class="active">
+        <a href="comptablesuivi">
+            <i class='bx bxs-bank' ></i>
+            <span class="text">Suivi des budget</span>
+        </a>
+    </li>
+    {% comment %} <li>
+        <a href="comptaStatistique">
+            <i class='bx bxs-doughnut-chart' ></i>
+            <span class="text">Statistique</span>
+        </a>
+    </li> {% endcomment %}
+</ul>
+<ul class="side-menu">
+    <li>
+        <a href="#">
+            <i class='bx bxs-cog' ></i>
+            <span class="text">Parametre</span>
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'deconnexion' %}" class="logout">
+            <i class='bx bxs-log-out-circle' ></i>
+            <span class="text">Deconnexion</span>
+        </a>
+    </li>
+</ul>
+{% endblock  %}
+
+
+{% comment %} Navbar head {% endcomment %}
+{% block navbarhead %}
+<a class="active" href="comptablesuivi">Suivi des budgets</a>
+{% endblock  %}
+
+{% comment %} BUDGET {% endcomment %}
+{% block budgetTotal %}
+{{ total_montant }}
+{% endblock  %}
+
+{% block balance %}
+{{ total_depense }}
+{% endblock  %}
+
+{% block solde %}
+{{ solde }}
+{% endblock  %}
+
+{% comment %} Content {% endcomment %}
+{% block content %}
+<div class="table-data">
+    <div class="order">
+        <div class="head">
+            <div class="container mt-5">
+                <h2 class="majuscule">suivi des dépenses</h2>
+                <div class="input-group mb-3">
+                    <input type="text" id="searchInput" name="recherche" class="form-control" placeholder="Chercher..." oninput="searchTable()">
+                    <div class="input-group-append">
+                      <span class="input-group-text"><i class="fas fa-search"></i></span> <!-- Remplacez fas fa-search par la classe de votre icône de recherche -->
+                    </div>
+                  </div> 
+                <table class="table table-responsive table-bordered border-dark table-hover text-capitalize" id="myTable">
+                  <thead>
+                    <tr>
+                      <th>Nom de la rubrique</th>
+                      <th>Ligne Budgetaire</th>
+                      <th>Date</th>
+                      <th>Heure</th>
+                      <th>Montant</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for depenses in depense %}
+                    <tr>
+                        <td class="w-25">{{depenses.rubrique}}</td>
+                        <td class="w-25">{{depenses.ligne}}</td>
+                        <td class="w-15">{{depenses.date}}</td>
+                        <td class="w-15">{{depenses.times}}</td>
+                        <td class="w-20">{{depenses.montant}} MGA</td>
+                    </tr>
+                    {% endfor %}
+                    <!-- Ajoutez d'autres lignes pour plus de transactions -->
+                  </tbody>
+                </table>
+              </div>
+        </div>
+    </div>
+</div>
+{% endblock  %}

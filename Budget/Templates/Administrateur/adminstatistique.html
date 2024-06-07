@@ -1,0 +1,272 @@
+{% extends "../master.html" %}
+{% block title %}Admin statistique{% endblock  %}
+
+{% comment %} SIDEBAR {% endcomment %}
+{% block sidebar %}
+<a href="#" class="brand">
+    <img src="../../static/assets/img/logos.png" alt="" width="80px">
+    <span class="text">BudgetApp</span>
+</a>
+<ul class="side-menu top">
+    <li>
+        <a href="adminIndex">
+            <i class='bx bxs-dashboard' ></i>
+            <span class="text">Accueil</span>
+        </a>
+    </li>
+    <li>
+        <a href="adminutilisateur">
+            <i class='bx bxs-user' ></i>
+            <span class="text">Utilisateur</span>
+        </a>
+    </li>
+    <li>
+        <a href="adminsuivi">
+            <i class='bx bxs-bank' ></i>
+            <span class="text">Suivi des budget</span>
+        </a>
+    </li>
+    <li class="active">
+        <a href="adminstatistique">
+            <i class='bx bxs-doughnut-chart' ></i>
+            <span class="text">Statistique</span>
+        </a>
+    </li>
+</ul>
+<ul class="side-menu">
+    <li>
+        <a href="adminparametre">
+            <i class='bx bxs-cog'></i>
+            <span class="text">Parametre</span>
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'deconnexion' %}" class="logout">
+            <i class='bx bxs-log-out-circle' ></i>
+            <span class="text">Deconnexion</span>
+        </a>
+    </li>
+</ul>
+{% endblock  %}
+
+{% comment %} Navbar head {% endcomment %}
+{% block navbarhead %}
+<a class="active" href="adminstatistique">Statistique</a>
+{% endblock  %}
+
+{% comment %} BUDGET {% endcomment %}
+{% block budgetTotal %}
+{{ total_montant }}
+{% endblock  %}
+
+{% block balance %}
+{{ total_depense }}
+{% endblock  %}
+
+{% block solde %}
+{{ solde }}
+{% endblock  %}
+
+{% block content %}
+<div class="table-data">
+  <div class="order">
+      <div class="head">
+        <div class="container mt-3">
+          <div class="form-outline mb-4">
+              <div class="row">
+                  <div class="col">
+                      {% comment %} <a href="{% url "adminIndex" %}" class="btn btn-success"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16" color="white">
+                        <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+                      </svg> Retour dans l'acceuil</a> {% endcomment %}
+                      <h2 class="majuscule">Dépenses en {{ selected_year }} sur le budget {{budget_initial}} MGA</h2>
+                      <br>
+                      <label for="year" class="form-label">Choisir une année :</label>
+                      
+                      <select id="year" class="form-select">
+                  
+                      <option value="2024" {%if selected_year == 2024 %}selected {%endif%}>2024</option>
+                      <option value="2025" {%if selected_year == 2025 %}selected {%endif%}>2025</option>
+                      <option value="2027" {%if selected_year == 2027 %}selected {%endif%}>2027</option>
+                      <!-- Ajoutez d'autres années au besoin -->
+                      </select>
+                      </br>
+                  </div>
+                </div>
+              </div>
+
+<div class="container mt-3">
+<canvas id="myChart"></canvas>
+<script>
+
+  document.getElementById('year').addEventListener('change', function() {
+      var selectedYear = this.value;
+      // Rechargez la page avec l'année sélectionnée
+      window.location.href = window.location.pathname + '?selected_year=' + selectedYear;
+  });
+  
+  // Récupérer les noms des mois et les pourcentages des dépenses
+  const mois = Object.keys({{ stat|safe }});
+  const pourcentages = Object.values({{ stat|safe }});
+  const switchMode = document.getElementById('switch-mode');
+
+// Fonction pour détecter le mode sombre ou clair
+function detectColorScheme() {
+    return document.body.classList.contains('dark') ? 'dark' : 'light';
+}
+
+// Couleurs pour les étiquettes des mois en mode sombre et clair
+var lightModeColor = '#342E37'; // Couleur pour le mode clair
+var darkModeColor = 'white'; // Couleur pour le mode sombre
+
+// Mettre à jour la couleur lorsque le mode change
+function updateMonthLabelColor() {
+    var monthLabelColor = detectColorScheme() === 'dark' ? darkModeColor : lightModeColor;
+    myChart.options.scales.x.ticks.color = monthLabelColor;
+    myChart.options.scales.y.ticks.color = monthLabelColor;
+
+    // Définir la couleur du texte de l'axe des abscisses (x)
+    myChart.options.scales.x.title.color = monthLabelColor;
+    myChart.options.scales.y.title.color = monthLabelColor;
+
+    // Définir la couleur du texte du label du dataset "Dépenses en Pourcentage"
+    myChart.options.plugins.legend.labels.color = monthLabelColor;
+    myChart.update(); // Mettre à jour le graphique   
+}
+
+switchMode.addEventListener('change', function () {
+    if (this.checked) {
+        document.body.classList.add('dark');
+    } else {
+        document.body.classList.remove('dark');
+    }
+    updateMonthLabelColor(); // Appeler la fonction pour mettre à jour la couleur
+});
+
+  // Créer le graphique
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: mois,
+          datasets: [{
+              label: 'Dépenses en Pourcentage',
+              data: pourcentages,
+              backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+      ],
+      borderColor: [
+      'rgba(255, 99, 132, 1)',
+      'rgba(54, 162, 235, 1)',
+      'rgba(255, 206, 86, 1)',
+      'rgba(75, 192, 192, 1)',
+      'rgba(153, 102, 255, 1)',
+      'rgba(255, 159, 64, 1)',
+      'rgba(255, 99, 132, 1)',
+      'rgba(54, 162, 235, 1)',
+      'rgba(255, 206, 86, 1)',
+      'rgba(75, 192, 192, 1)',
+      'rgba(153, 102, 255, 1)',
+      'rgba(255, 159, 64, 1)'
+  ],
+              borderWidth: 1
+          }]
+      },
+      
+      options: {
+           scales: {
+              y: {
+                  beginAtZero: true,
+                  title: {
+                      display: true,
+                      text: 'Pourcentage (%)',
+                  }
+              },
+              x: {
+                  title: {
+                      display: true,
+                      text: 'Mois',
+                  }
+              }
+          }
+      }
+  });
+
+  AOS.init();
+</script>
+
+        <div class="table-responsive">
+          <h2 class="majuscule">Depense de l'annee {{selected_year}} avec le budget {{budget_initial}} MGA</h2>
+          <table class="table">
+            <thead>
+              
+              <tr>
+                <th>
+                  #
+                </th>
+                <th>
+                  Mois
+                </th>
+                <th>
+                  Depense
+                </th>
+                <th>
+                  Pourcentage
+                </th>
+                <th>
+                  %
+                </th>
+                <th>
+                  Details
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for mois, montant in depenses_en_pourcentage.items %}
+              <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ mois }}</td>
+                  <td>{{ montant.total }} MGA</td>
+                  <td>
+                      <div class="progress">
+                          <div class="progress-bar bg-gradient-success" role="progressbar" style="width: {{ montant.pourcentage }}%;" aria-valuenow="{{ montant }}" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                  </td>
+                  <td>{{ montant.pourcentage }}%</td>
+                  <td><a href="depenseinfoparmois?mois={{ mois }}-{{selected_year}}" data-bs-toggle="tooltip" data-bs-placement="top" title="Plus d'information"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+                  </svg></a></td>
+              </tr>
+              {% endfor %}
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td style="font-weight: bold; font-size: 1em;">TOTAL DEPENSE GENERALE</td>
+              <td style="font-weight: bold; font-size: 1em;">: {{totalDepense}} MGA</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+{% endblock  %}

@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>404 Erreur</title>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap -->
+	<link rel="stylesheet" href="{% static 'assets/bootstrap/bootstrap.min.css'%}">
+    <style>
+        section{
+            padding: 5%;
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <div class="main container">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-3"></div>
+                
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <div class="main-img text-center">
+                        <img src="{% static 'assets/img/main.png'%}" alt="Main" class="img-fluid pb-3">
+
+                        <h2>Page non trouvé</h2>
+                        <p class="main-description pt-2">Nous sommes désolés, la page que vous avez demandée est introuvable. Veuillez revenir à la page connexion.</p>
+                        <a href="{% url "connexion" %}" class="btn btn-success">Retour</a>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-12 col-lg-3"></div>
+            </div>
+        </div>
+    </section>
+</body>
+<script src="{% static 'assets/bootstrap/bootstrap.min.js'%}"></script>
+
+</html>

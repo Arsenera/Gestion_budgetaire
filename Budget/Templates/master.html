@@ -1,0 +1,219 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Boxicons -->
+	<link href="{% static 'assets/node_modules/boxicons/css/boxicons.min.css'%}" rel='stylesheet'>
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="{% static 'assets/bootstrap/bootstrap.min.css'%}">
+
+	<!-- My CSS -->
+	<link rel="stylesheet" href="{% static 'assets/style.css'%}">
+
+	{% comment %} AOS ANIMA {% endcomment %}
+	<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    {% comment %} Chart js {% endcomment %}
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
+
+	<title>{% block title %}{% endblock  %}</title>
+
+	<style>
+		select{
+			max-width: 190px;
+			background-color: #f5f5f5;
+			color: #242424;
+			padding: .15rem .5rem;
+			min-height: 40px;
+			border-radius: 4px;
+			outline: none;
+			border: none;
+			line-height: 1.15;
+			box-shadow: 0px 10px 20px -18px;
+		}
+		  .progress {
+			display: flex;
+			height: 1rem;
+			overflow: hidden;
+			font-size: 0.75rem;
+			background-color: #e9ecef;
+			border-radius: 0.25rem; }
+		  
+		  .progress-bar {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #fff;
+			background-color: #5AE4A8}
+		  
+		  .progress-bar-striped {
+			background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+			background-size: 1rem 1rem; }
+		  
+		  .progress-bar-animated {
+			animation: progress-bar-stripes 1s linear infinite; }	
+			
+			#mga {
+				color: var(--dark);
+			}
+
+			.tables {
+				background: #242424;
+			}
+			
+	</style>
+	
+</head>
+<body>
+	<!-- SIDEBAR -->
+	<section id="sidebar">
+		{% block sidebar %}{% endblock  %}
+	</section>
+	<!-- SIDEBAR -->
+
+	<!-- CONTENT -->
+	<section id="content">
+		<!-- NAVBAR -->
+		<nav>
+			<i class='bx bx-menu' ></i>
+			<a href="#" class="nav-link">Interface</a>
+			<form action="#">
+				<div class="form-input">
+					<input type="button" placeholder="Chercher...">
+					<button type="submit" class="search-btn"><i class='bx bxs' ></i></button> 				</div>
+			</form>
+			<input type="checkbox" id="switch-mode" hidden>
+			<label for="switch-mode" class="switch-mode"></label>
+		</nav>
+		<!-- NAVBAR -->
+
+		<!-- MAIN -->
+		<main>
+			<div class="head-title">
+				<div class="left">
+					<h1>Budgetaire</h1>
+					<ul class="breadcrumb">
+						<li>
+							<a href="#">Journal</a>
+						</li>
+						<li><i class='bx bx-chevron-right' ></i></li>
+						<li>
+							{% block navbarhead %}{% endblock  %}
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<ul class="box-info">
+				<li>
+					<i class='bx bxs-coin-stack' ></i>
+					<span class="text" style="margin-left: 0px; margin-top: 17px; display: flex; flex-direction: column; align-items: center;">
+						<h3>{% block budgetTotal %}{% endblock  %}</h3>
+						<span id="mga">MGA</span>
+						<p><strong>Budget</strong></p>
+					</span>
+				</li>
+				<li>
+					<i class='bx bxs-calculator' ></i>
+					<span class="text" style="margin-left: 0px; margin-top: 17px; display: flex; flex-direction: column; align-items: center;">
+						<h3>{% block balance %}{% endblock  %}</h3>
+						<span id="mga">MGA</span>
+						<p class=""><strong>Balance</strong></p>
+					</span>
+				</li>
+				<li>
+					<i class='bx bxs-dollar-circle'></i>
+					<span class="text" style="margin-left: 0px; margin-top: 17px; display: flex; flex-direction: column; align-items: center;">
+						<h3>{% block solde %}{% endblock  %}</h3>
+						<span id="mga">MGA</span>
+						<p><strong>Solde</strong></p>
+					</span>
+				</li>
+			</ul>
+			<div id="div1">
+				{% block content %}{% endblock  %}
+			</div>
+			</div>			
+		</main>
+		<!-- MAIN -->
+	</section>
+	<!-- CONTENT -->  
+	<script src="{% static 'assets/script.js'%}"></script>
+
+	<script src="{% static 'assets/bootstrap/bootstrap.min.js'%}"></script>
+
+	<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	<script>
+		function generatePDF() { 
+			var originalContent = document.querySelector('#div1').innerHTML; // Sauvegarde du contenu actuel du bloc content
+			document.body.innerHTML = ''; // Vide la page
+			var contentBlock = document.createElement('div2'); // Crée un nouvel élément div
+			contentBlock.innerHTML = originalContent; // Assignation du contenu sauvegardé au nouvel élément div
+			document.body.appendChild(contentBlock); // Ajout du nouvel élément div à la page
+			print(); // Impression de la page avec le contenu du bloc content
+
+			// Recharger la page après l'impression
+			window.location.reload();
+		}
+	  </script>
+
+	<script>
+		AOS.init();
+
+		function confirmDelete() {
+			if (confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
+				document.getElementById("deleteForm").submit();
+			} else {
+				// L'utilisateur a annulé, rien ne se passe.
+			}
+		}
+
+		function Budget() {
+			if (confirm("Êtes-vous sûr de vouloir supprimer cet budget ?")) {
+				document.getElementById("deleteBudget").submit();
+			} else {
+				// L'utilisateur a annulé, rien ne se passe.
+			}
+		}
+
+		function confirmDeleteDepense() {
+			if (confirm("Êtes-vous sûr de vouloir supprimer cette dépense ?")) {
+				document.getElementById("deleteDepenseForm").submit();
+			} else {
+				// L'utilisateur a annulé, rien ne se passe.
+			}
+		}
+	</script>
+
+	<script>
+		function searchTable() {
+		var input, filter, table, tr, td, i, txtValue;
+		input = document.getElementById("searchInput");
+		filter = input.value.toUpperCase();
+		table = document.getElementById("myTable");
+		tr = table.getElementsByTagName("tr");
+	
+		// Loop through all table rows, and hide those who don't match the search query
+		for (i = 0; i < tr.length; i++) {
+			td = tr[i].getElementsByTagName("td")[0]; // Change index [0] to match the column you want to search
+			if (td) {
+				txtValue = td.textContent || td.innerText;
+				if (txtValue.toUpperCase().indexOf(filter) > -1) {
+					tr[i].style.display = "";
+				} else {
+					tr[i].style.display = "none";
+				}
+			}
+		}
+	}
+	</script>
+</body>
+</html>

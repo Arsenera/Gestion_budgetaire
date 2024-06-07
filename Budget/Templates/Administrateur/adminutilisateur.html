@@ -1,0 +1,154 @@
+{% extends "../master.html" %}
+
+{% block title %}Gestion des utilisateurs{% endblock  %}
+
+{% comment %} SIDEBAR {% endcomment %}
+{% block sidebar %}
+<a href="#" class="brand">
+    <img src="../../static/assets/img/logos.png" alt="" width="80px">
+    <span class="text">BudgetApp</span>
+</a>
+<ul class="side-menu top">
+    <li>
+        <a href="adminIndex">
+            <i class='bx bxs-dashboard' ></i>
+            <span class="text">Accueil</span>
+        </a>
+    </li>
+    <li class="active">
+        <a href="adminutilisateur">
+            <i class='bx bxs-user'></i>
+            <span class="text">Utilisateur</span>
+        </a>
+    </li>
+    <li>
+        <a href="adminsuivi">
+            <i class='bx bxs-bank' ></i>
+            <span class="text">Suivi des budget</span>
+        </a>
+    </li>
+    <li>
+        <a href="adminstatistique">
+            <i class='bx bxs-doughnut-chart' ></i>
+            <span class="text">Statistique</span>
+        </a>
+    </li>
+</ul>
+<ul class="side-menu">
+    <li>
+        <a href="adminparametre">
+            <i class='bx bxs-cog' ></i>
+            <span class="text">Parametre</span>
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'deconnexion' %}" class="logout">
+            <i class='bx bxs-log-out-circle' ></i>
+            <span class="text">Deconnexion</span>
+        </a>
+    </li>
+</ul>
+{% endblock  %}
+
+{% comment %} Navbar head {% endcomment %}
+{% block navbarhead %}
+<a class="active" href="adminutilisateur">Utilisateur</a>
+{% endblock  %}
+
+{% comment %} BUDGET {% endcomment %}
+{% block budgetTotal %}
+{{ total_montant }}
+{% endblock  %}
+
+{% block balance %}
+{{ total_depense }}
+{% endblock  %}
+
+{% block solde %}
+{{ solde }}
+{% endblock  %}
+
+{% comment %} Content {% endcomment %}
+{% block content %}
+<div class="table-data">
+    <div class="order">
+        <div class="head">
+            <div class="container">
+                <h2 class="majuscule">liste des comptables</h2>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Pseudo</th>
+                            <th>Contact</th>
+                            <th>Modifier</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for utilisateur in page_obj %}
+                        <tr>
+                            <td>{{utilisateur.pseudo}}</td>
+                            <td>{{utilisateur.contact}}</td>
+                            <td>
+                                <a href="{% url "modifierutilisateur" utilisateur.id %}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16" color="#FFC107" style="cursor: pointer;">
+                                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                 <!-- Ajouter les liens de pagination -->
+                 {% if page_obj.has_other_pages %}
+                 <ul class="pagination justify-content-center">
+                     {% if page_obj.has_previous %}
+                     <li class="page-item">
+                         <a class="page-link" href="?page=1">
+                             <!-- Insérez ici l'icône Boxicon pour "Premier" -->
+                             <i class='bx bx-chevron-left'></i>
+                         </a>
+                     </li>
+                     <li class="page-item">
+                         <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                             <!-- Insérez ici l'icône Boxicon pour "Précédent" -->
+                             <i class='bx bx-caret-left'></i>
+                         </a>
+                     </li>
+                     {% endif %}
+                     {% for num in page_obj.paginator.page_range %}
+                     {% if page_obj.number == num %}
+                     <li class="page-item active" aria-current="page">
+                         <span class="page-link">{{ num }}<span class="sr-only"></span></span>
+                     </li>
+                     {% else %}
+                     <li class="page-item">
+                         <a class="page-link" href="?page={{ num }}">
+                             {{ num }}
+                         </a>
+                     </li>
+                     {% endif %}
+                     {% endfor %}
+                     {% if page_obj.has_next %}
+                     <li class="page-item">
+                         <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                             <!-- Insérez ici l'icône Boxicon pour "Suivant" -->
+                             <i class='bx bx-caret-right'></i>
+                         </a>
+                     </li>
+                     <li class="page-item">
+                         <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                             <!-- Insérez ici l'icône Boxicon pour "Dernier" -->
+                             <i class='bx bx-chevron-right'></i>
+                         </a>
+                     </li>
+                     {% endif %}
+                 </ul>
+                 {% endif %}
+                 <!-- Fin des liens de pagination -->
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock  %}
